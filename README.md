@@ -27,6 +27,9 @@
 # Clone/access project directory
 cd /path/to/project
 
+# Copy environment configuration (optional)
+cp env.example .env
+
 # Build and start the stack
 docker-compose up --build
 
@@ -34,13 +37,13 @@ docker-compose up --build
 docker-compose up --build -d
 ```
 
-**Web Access:** http://localhost:8081
+**Web Access:** http://localhost:8081 (o el puerto configurado en NGINX_HTTP_PORT)
 
 ## 📋 Requirements
 
 - Docker and Docker Compose
-- Available ports: 8081, 8444, 3307, 10050
-- (Optional) Zabbix Server running on localhost:8080
+- Available ports: 8081, 8444, 3307, 10050 (configurables via variables de entorno)
+- (Optional) Zabbix Server running on localhost:10051
 
 ## 🏗️ Architecture
 
@@ -51,11 +54,11 @@ docker-compose up --build -d
 - **MySQL 8.0** (port 3307)
 - **Zabbix Agent2 7.4** (port 10050)
 
-**Port Mapping:**
-- `8081` → Nginx HTTP (avoids conflict with Herd:80)
-- `8444` → Nginx HTTPS (avoids conflict with Herd:443)
-- `3307` → MySQL (avoids conflict with Herd:3306)
-- `10050` → Zabbix Agent
+**Port Mapping (configurable via variables de entorno):**
+- `${NGINX_HTTP_PORT:-8081}` → Nginx HTTP (avoids conflict with Herd:80)
+- `${NGINX_HTTPS_PORT:-8444}` → Nginx HTTPS (avoids conflict with Herd:443)
+- `${MYSQL_PORT:-3307}` → MySQL (avoids conflict with Herd:3306)
+- `${ZABBIX_AGENT_PORT:-10050}` → Zabbix Agent
 
 ## 🛠️ Useful Commands
 
@@ -123,21 +126,28 @@ docker exec lemp-zabbix-test mysql -u testuser -ptestpass testdb
 
 ## 🔧 Configuration
 
-### MySQL
-- **Root**: `root` / `root123`
-- **User**: `testuser` / `testpass`
-- **Database**: `testdb`
+### Variables de Entorno
+Copia `env.example` a `.env` y modifica los valores según tus necesidades:
 
-### Zabbix Agent2
-- **Server**: `host.docker.internal` (your Mac)
-- **Port**: `10051` (server) / `10050` (agent)
+```bash
+cp env.example .env
+```
+
+### MySQL (configurable via variables de entorno)
+- **Root**: `${MYSQL_USER:-root}` / `${MYSQL_ROOT_PASSWORD:-root123}`
+- **User**: `${MYSQL_USER:-testuser}` / `${MYSQL_PASSWORD:-testpass}`
+- **Database**: `${MYSQL_DATABASE:-testdb}`
+
+### Zabbix Agent2 (configurable via variables de entorno)
+- **Server**: `${ZABBIX_SERVER:-host.docker.internal}` (your Mac)
+- **Port**: `${ZABBIX_SERVER_PORT:-10051}` (server) / `${ZABBIX_AGENT_PORT:-10050}` (agent)
 - **Hostname**: `lemp-test-host`
 
 ## 🌐 Test Pages
 
-- **Main Dashboard**: http://localhost:8081
-- **MySQL Test**: http://localhost:8081/test-mysql.php
-- **PHP Info**: http://localhost:8081/phpinfo.php
+- **Main Dashboard**: http://localhost:${NGINX_HTTP_PORT:-8081}
+- **MySQL Test**: http://localhost:${NGINX_HTTP_PORT:-8081}/test-mysql.php
+- **PHP Info**: http://localhost:${NGINX_HTTP_PORT:-8081}/phpinfo.php
 
 ## 🔍 Troubleshooting
 
@@ -146,8 +156,9 @@ docker exec lemp-zabbix-test mysql -u testuser -ptestpass testdb
 # View detailed logs
 docker-compose logs
 
-# Check ports in use
+# Check ports in use (reemplaza 8081 con tu puerto configurado)
 lsof -i :8081
+lsof -i :10050  # Verificar puerto Zabbix Agent
 ```
 
 ### MySQL won't connect
