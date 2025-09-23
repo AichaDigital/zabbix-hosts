@@ -1,0 +1,74 @@
+# Claude Code y editores
+.claude/
+.cursor/
+
+# Datos de MySQL - SOLO el contenido, mantener estructura
+mysql/data/*
+!mysql/data/.gitkeep
+
+# Logs generados - SOLO archivos de log, no configuración
+logs/nginx/*.log
+logs/nginx/*.err
+logs/php/*.log
+logs/php/*.err
+logs/*.log
+!logs/.gitkeep
+!logs/nginx/.gitkeep
+!logs/php/.gitkeep
+
+# Variables de entorno locales - NO las de configuración base
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Archivos temporales de Docker
+*.log
+
+# Backups y dumps de base de datos
+*.sql
+*.sql.gz
+*.dump
+
+# Archivos temporales del sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Archivos temporales de aplicaciones
+*.tmp
+*.cache
+*.pid
+
+# Certificados auto-generados
+ssl/*.pem
+ssl/*.key
+ssl/*.crt
+
+# IDE y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# MacOS
+.AppleDouble
+.LSOverride
+Icon
+
+# Windows
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+
+# Docker volumes locales
+volumes/
+data/backups/
+
