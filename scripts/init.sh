@@ -1,16 +1,16 @@
 #!/bin/bash
 
-echo "Iniciando servicios LEMP..."
+echo "Starting LEMP services..."
 
-# Configurar MySQL si es la primera vez
+# Configure MySQL if first time
 if [ ! -f "/var/lib/mysql/.initialized" ]; then
-    echo "Configurando MySQL..."
+    echo "Configuring MySQL..."
 
-    # Iniciar MySQL sin systemd para configuración inicial
+    # Start MySQL without systemd for initial configuration
     service mysql start
     sleep 10
 
-    # Configurar base de datos
+    # Configure database
     mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PASSWORD}';"
     mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE ${MYSQL_DATABASE};"
     mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
@@ -18,35 +18,35 @@ if [ ! -f "/var/lib/mysql/.initialized" ]; then
     mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "FLUSH PRIVILEGES;"
 
     touch /var/lib/mysql/.initialized
-    echo "MySQL configurado"
+    echo "MySQL configured"
     service mysql stop
     sleep 2
 fi
 
-# Crear directorios necesarios
+# Create necessary directories
 mkdir -p /var/log/zabbix /var/run/zabbix
 
-# Ajustar permisos
+# Adjust permissions
 chown mysql:mysql /var/lib/mysql /var/run/mysqld
 chown zabbix:zabbix /var/run/zabbix /var/log/zabbix
 chown www-data:www-data /var/www/html
 
-# Iniciar servicios con service (compatible con systemd)
-echo "Iniciando servicios..."
+# Start services with service command (systemd compatible)
+echo "Starting services..."
 service mysql start
 service nginx start
 service php8.3-fpm start
 service zabbix-agent2 start
 
-# Verificar que los servicios están corriendo
-echo "Verificando servicios..."
+# Verify services are running
+echo "Verifying services..."
 service mysql status
 service nginx status
 service php8.3-fpm status
 service zabbix-agent2 status
 
-echo "Todos los servicios iniciados. Container listo."
-echo "Acceso web: http://localhost:8081"
+echo "All services started. Container ready."
+echo "Web access: http://localhost:8081"
 
-# Mantener el container corriendo
+# Keep container running
 tail -f /var/log/nginx/access.log /var/log/nginx/error.log

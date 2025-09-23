@@ -8,229 +8,229 @@
 [![Zabbix](https://img.shields.io/badge/Zabbix-7.4-red.svg)](https://www.zabbix.com/)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
-**Entorno de desarrollo LEMP completo en Docker con Zabbix Agent2 7.4 para pruebas de monitoreo y desarrollo de aplicaciones PHP.**
+**Complete LEMP development environment in Docker with Zabbix Agent2 7.4 for monitoring tests and PHP application development.**
 
-## ✨ Características
+## ✨ Features
 
-- 🏗️ **Stack LEMP completo** - Ubuntu 24.04, Nginx, PHP 8.3, MySQL 8.0
-- 📊 **Zabbix Agent2 7.4** - Monitoreo avanzado desde repositorio oficial
-- 🚀 **Inicio rápido** - Un comando para levantar todo el stack
-- 🔧 **Sin supervisor** - Servicios nativos de systemd para máxima simplicidad
-- 🌐 **Puertos alternativos** - Compatible con Laravel Herd en macOS
-- 📱 **Dashboard web** - Interfaz de pruebas con estado de servicios
-- 💾 **Persistencia MySQL** - Datos conservados entre reinicios
-- 🐛 **Debugging integrado** - Logs y herramientas de diagnóstico incluidas
+- 🏗️ **Complete LEMP Stack** - Ubuntu 24.04, Nginx, PHP 8.3, MySQL 8.0
+- 📊 **Zabbix Agent2 7.4** - Advanced monitoring from official repository
+- 🚀 **Quick Start** - One command to bring up the entire stack
+- 🔧 **No Supervisor** - Native systemd services for maximum simplicity
+- 🌐 **Alternative Ports** - Compatible with Laravel Herd on macOS
+- 📱 **Web Dashboard** - Testing interface with service status
+- 💾 **MySQL Persistence** - Data preserved between restarts
+- 🐛 **Integrated Debugging** - Built-in logs and diagnostic tools
 
-## 🚀 Inicio Rápido
+## 🚀 Quick Start
 
 ```bash
-# Clonar/acceder al directorio del proyecto
-cd /ruta/al/proyecto
+# Clone/access project directory
+cd /path/to/project
 
-# Construir e iniciar el stack
+# Build and start the stack
 docker-compose up --build
 
-# O en segundo plano
+# Or run in background
 docker-compose up --build -d
 ```
 
-**Acceso web:** http://localhost:8081
+**Web Access:** http://localhost:8081
 
-## 📋 Requisitos
+## 📋 Requirements
 
-- Docker y Docker Compose
-- Puertos disponibles: 8081, 8444, 3307, 10050
-- (Opcional) Servidor Zabbix corriendo en localhost:8080
+- Docker and Docker Compose
+- Available ports: 8081, 8444, 3307, 10050
+- (Optional) Zabbix Server running on localhost:8080
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-**Stack incluido:**
-- **Ubuntu 24.04** con systemd nativo
-- **Nginx 1.24.0** (puerto 8081)
-- **PHP 8.3-FPM** con extensiones comunes
-- **MySQL 8.0** (puerto 3307)
-- **Zabbix Agent2 7.4** (puerto 10050)
+**Included Stack:**
+- **Ubuntu 24.04** with native systemd
+- **Nginx 1.24.0** (port 8081)
+- **PHP 8.3-FPM** with common extensions
+- **MySQL 8.0** (port 3307)
+- **Zabbix Agent2 7.4** (port 10050)
 
-**Puertos mapeados:**
-- `8081` → Nginx HTTP (evita conflicto con Herd:80)
-- `8444` → Nginx HTTPS (evita conflicto con Herd:443)
-- `3307` → MySQL (evita conflicto con Herd:3306)
+**Port Mapping:**
+- `8081` → Nginx HTTP (avoids conflict with Herd:80)
+- `8444` → Nginx HTTPS (avoids conflict with Herd:443)
+- `3307` → MySQL (avoids conflict with Herd:3306)
 - `10050` → Zabbix Agent
 
-## 🛠️ Comandos Útiles
+## 🛠️ Useful Commands
 
-### Gestión del Stack
+### Stack Management
 ```bash
-# Iniciar servicios
+# Start services
 docker-compose up -d
 
-# Ver logs en tiempo real
+# View logs in real time
 docker-compose logs -f
 
-# Detener servicios
+# Stop services
 docker-compose down
 
-# Reconstruir desde cero
+# Rebuild from scratch
 docker-compose down && docker-compose up --build
 
-# Acceder al container
+# Access container
 docker exec -it lemp-zabbix-test bash
 ```
 
-### Gestión de Servicios (dentro del container)
+### Service Management (inside container)
 ```bash
-# Estado de servicios
+# Service status
 docker exec lemp-zabbix-test service nginx status
 docker exec lemp-zabbix-test service php8.3-fpm status
 docker exec lemp-zabbix-test service mysql status
 docker exec lemp-zabbix-test service zabbix-agent2 status
 
-# Reiniciar servicios
+# Restart services
 docker exec lemp-zabbix-test service nginx restart
 docker exec lemp-zabbix-test service mysql restart
 docker exec lemp-zabbix-test service zabbix-agent2 restart
 ```
 
-### Depuración
+### Debugging
 ```bash
-# Ver logs de servicios
+# View service logs
 docker exec lemp-zabbix-test tail -f /var/log/nginx/error.log
 docker exec lemp-zabbix-test tail -f /var/log/zabbix/zabbix_agent2.log
 
-# Probar configuración Zabbix
+# Test Zabbix configuration
 docker exec lemp-zabbix-test zabbix_agent2 -t
 
-# Conectar a MySQL
+# Connect to MySQL
 docker exec lemp-zabbix-test mysql -u testuser -ptestpass testdb
 ```
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
 /
-├── docker-compose.yml          # Orquestación principal
-├── Dockerfile                  # Imagen LEMP stack
-├── nginx/default.conf          # Configuración Nginx
-├── zabbix/zabbix_agent2.conf  # Configuración Zabbix
-├── scripts/init.sh            # Script de inicialización
-├── www/                       # Archivos web
-│   ├── index.php             # Dashboard principal
-│   ├── test-mysql.php        # Test MySQL detallado
-│   └── phpinfo.php           # Información PHP
-├── logs/                      # Logs aplicación
-└── mysql/data/               # Datos MySQL persistentes
+├── docker-compose.yml          # Main orchestration
+├── Dockerfile                  # LEMP stack image
+├── nginx/default.conf          # Nginx configuration
+├── zabbix/zabbix_agent2.conf  # Zabbix configuration
+├── scripts/init.sh            # Initialization script
+├── www/                       # Web files
+│   ├── index.php             # Main dashboard
+│   ├── test-mysql.php        # Detailed MySQL test
+│   └── phpinfo.php           # PHP information
+├── logs/                      # Application logs
+└── mysql/data/               # Persistent MySQL data
 ```
 
-## 🔧 Configuración
+## 🔧 Configuration
 
 ### MySQL
 - **Root**: `root` / `root123`
-- **Usuario**: `testuser` / `testpass`
-- **Base de datos**: `testdb`
+- **User**: `testuser` / `testpass`
+- **Database**: `testdb`
 
 ### Zabbix Agent2
-- **Server**: `host.docker.internal` (tu Mac)
-- **Puerto**: `10051` (servidor) / `10050` (agente)
+- **Server**: `host.docker.internal` (your Mac)
+- **Port**: `10051` (server) / `10050` (agent)
 - **Hostname**: `lemp-test-host`
 
-## 🌐 Páginas de Prueba
+## 🌐 Test Pages
 
-- **Dashboard principal**: http://localhost:8081
-- **Test MySQL**: http://localhost:8081/test-mysql.php
+- **Main Dashboard**: http://localhost:8081
+- **MySQL Test**: http://localhost:8081/test-mysql.php
 - **PHP Info**: http://localhost:8081/phpinfo.php
 
 ## 🔍 Troubleshooting
 
-### Container no inicia
+### Container won't start
 ```bash
-# Ver logs detallados
+# View detailed logs
 docker-compose logs
 
-# Verificar puertos en uso
+# Check ports in use
 lsof -i :8081
 ```
 
-### MySQL no conecta
+### MySQL won't connect
 ```bash
-# Verificar estado
+# Check status
 docker exec lemp-zabbix-test service mysql status
 
-# Reinicializar datos (CUIDADO: borra datos)
+# Reinitialize data (CAUTION: deletes data)
 docker-compose down
 rm -rf mysql/data/*
 docker-compose up --build
 ```
 
-### Zabbix Agent no funciona
+### Zabbix Agent not working
 ```bash
-# Verificar configuración
+# Check configuration
 docker exec lemp-zabbix-test zabbix_agent2 -t
 
-# Ver logs
+# View logs
 docker exec lemp-zabbix-test tail -f /var/log/zabbix/zabbix_agent2.log
 ```
 
-### Errores de permisos
+### Permission errors
 ```bash
-# Reiniciar con permisos limpios
+# Restart with clean permissions
 docker-compose down
 docker system prune -f
 docker-compose up --build
 ```
 
-## 🎯 Propósito
+## 🎯 Purpose
 
-Este entorno está diseñado para:
-- Pruebas de desarrollo LEMP
-- Testing de configuraciones Zabbix
-- Desarrollo de aplicaciones PHP
-- Monitoreo y métricas de aplicaciones
+This environment is designed for:
+- LEMP development testing
+- Zabbix configuration testing
+- PHP application development
+- Application monitoring and metrics
 
-**Nota**: Este es un entorno de desarrollo/testing, no para producción.
+**Note**: This is a development/testing environment, not for production.
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-Las contribuciones son bienvenidas! Por favor:
+Contributions are welcome! Please:
 
-1. Fork el proyecto
-2. Crea tu feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la branch (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 🐛 Reportar Issues
+## 🐛 Report Issues
 
-Si encuentras un bug o tienes una sugerencia:
+If you find a bug or have a suggestion:
 
-1. Verifica que no exista un issue similar
-2. Abre un nuevo issue con descripción detallada
-3. Incluye pasos para reproducir el problema
-4. Adjunta logs relevantes si es posible
+1. Check that a similar issue doesn't exist
+2. Open a new issue with detailed description
+3. Include steps to reproduce the problem
+4. Attach relevant logs if possible
 
-## 📝 Notas Técnicas
+## 📝 Technical Notes
 
-- **Arquitectura**: Servicios nativos de Ubuntu systemd (sin supervisor)
-- **Persistencia**: Datos MySQL en `./mysql/data/`
-- **Networking**: Host networking para compatibilidad con Zabbix server
-- **Configuración**: Optimizada para desarrollo y testing
-- **Compatibilidad**: Diseñado para macOS con Laravel Herd
+- **Architecture**: Native Ubuntu systemd services (no supervisor)
+- **Persistence**: MySQL data in `./mysql/data/`
+- **Networking**: Host networking for Zabbix server compatibility
+- **Configuration**: Optimized for development and testing
+- **Compatibility**: Designed for macOS with Laravel Herd
 
 ## 📋 Roadmap
 
-- [ ] Soporte para HTTPS con certificados auto-firmados
-- [ ] Configuración Zabbix server opcional incluida
-- [ ] Scripts de backup/restore para MySQL
-- [ ] Monitoreo adicional con Prometheus
-- [ ] Docker multi-stage builds para optimización
+- [ ] HTTPS support with self-signed certificates
+- [ ] Optional included Zabbix server configuration
+- [ ] MySQL backup/restore scripts
+- [ ] Additional monitoring with Prometheus
+- [ ] Docker multi-stage builds for optimization
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la Licencia GNU General Public License v3.0. Ver el archivo [LICENSE](LICENSE) para más detalles.
+This project is under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
-Desarrollado con ❤️ para la comunidad de desarrollo PHP y DevOps.
+Developed with ❤️ for the PHP development and DevOps community.
 
 ---
 
-⭐ **Si este proyecto te fue útil, dale una estrella!** ⭐
+⭐ **If this project was useful to you, give it a star!** ⭐
